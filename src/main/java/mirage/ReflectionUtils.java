@@ -15,14 +15,23 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 public class ReflectionUtils {
+	public static boolean classIsOfEitherType(Class<?> classUnderTest, Class<?>... classes) {
+		for (Class<?> clazz : classes) {
+			if (classUnderTest.getName().trim().equals(clazz.getName().trim())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static boolean objectIsOfType(Class<?> actualClass, Class<?> expectedClass) {
 		return actualClass.getName().trim().equals(expectedClass.getName().trim());
 	}
-	
+
 	public static boolean objectIsOfType(Object object, Class<?> expectedClass) {
 		return object.getClass().getName().trim().equals(expectedClass.getName().trim());
 	}
-	
+
 	public static List<Class<?>> classNamesToClasses(List<String> classNames) {
 		return Lists.transform(classNames, new Function<String, Class<?>>() {
 			public Class<?> apply(String type) {
@@ -30,7 +39,7 @@ public class ReflectionUtils {
 			}
 		});
 	}
-	
+
 	public static List<Field> getAllFieldsIn(Object object) {
 		List<Field> classes = new ArrayList<Field>();
 		classes.addAll(Arrays.asList(object.getClass().getDeclaredFields()));
@@ -149,7 +158,7 @@ public class ReflectionUtils {
 		}
 		return true;
 	}
-	
+
 	public static Object getInstanceOfClassForcibly(String className) {
 		return getInstanceOfClassForcibly(getClassForClassName(className));
 	}
