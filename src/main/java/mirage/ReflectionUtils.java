@@ -15,6 +15,21 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 public class ReflectionUtils {
+	public static boolean classImplements(Class<?> classUnderTest, Class<?> interfaceExpected) {
+		if(classUnderTest.equals(interfaceExpected)) {
+			return true;
+		}
+		Class<?>[] interfaces = classUnderTest.getInterfaces();
+		if(interfaces != null) {
+			for(Class<?> clazz: interfaces) {
+				if(clazz.equals(interfaceExpected)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public static boolean classIsOfEitherType(Class<?> classUnderTest, Class<?>... classes) {
 		for (Class<?> clazz : classes) {
 			if (classUnderTest.getName().trim().equals(clazz.getName().trim())) {
