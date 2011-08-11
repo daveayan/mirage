@@ -15,21 +15,65 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 public class ReflectionUtils {
+
+	public static Object getFieldInObjectSafely(Object object, String fieldName) {
+		try {
+			return getFieldInObject(object, fieldName);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+	}
+
+	public static Object getFieldInObject(Object object, String fieldName) throws IllegalArgumentException {
+		List<Field> fields = getAllFieldsIn(object);
+		for (Field field : fields) {
+			if (fieldNameIs(field, fieldName)) {
+				return getFieldValueSafely(object, field);
+			}
+		}
+		throw new IllegalArgumentException();
+	}
+
+	public static Object getFieldValueSafely(Object object, Field field) {
+		try {
+			return getFieldValue(object, field);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static Object getFieldValue(Object object, Field field) throws IllegalArgumentException, IllegalAccessException {
+		return field.get(object);
+	}
+
+	public static boolean fieldNameIs(Field field, String fieldName) {
+		if (field == null || fieldName == null)
+			return false;
+		if (field.getName().trim().equals(fieldName.trim()))
+			return true;
+		return false;
+	}
+
 	public static boolean classImplements(Class<?> classUnderTest, Class<?> interfaceExpected) {
-		if(classUnderTest.equals(interfaceExpected)) {
+		if (classUnderTest.equals(interfaceExpected)) {
 			return true;
 		}
 		Class<?>[] interfaces = classUnderTest.getInterfaces();
-		if(interfaces != null) {
-			for(Class<?> clazz: interfaces) {
-				if(clazz.equals(interfaceExpected)) {
+		if (interfaces != null) {
+			for (Class<?> clazz : interfaces) {
+				if (clazz.equals(interfaceExpected)) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
-	
+
 	public static boolean classIsOfEitherType(Class<?> classUnderTest, Class<?>... classes) {
 		for (Class<?> clazz : classes) {
 			if (classUnderTest.getName().trim().equals(clazz.getName().trim())) {
