@@ -16,6 +16,10 @@ import com.google.common.collect.Lists;
 
 public class ReflectionUtils {
 
+	public static Object getDeepFieldInObjectSafely(Object object, String fieldName) {
+		return null;
+	}
+	
 	public static Object getFieldInObjectSafely(Object object, String fieldName) {
 		try {
 			return getFieldInObject(object, fieldName);
@@ -25,6 +29,7 @@ public class ReflectionUtils {
 	}
 
 	public static Object getFieldInObject(Object object, String fieldName) throws IllegalArgumentException {
+		if(object == null) return null;
 		List<Field> fields = getAllFieldsIn(object);
 		for (Field field : fields) {
 			if (fieldNameIs(field, fieldName)) {
@@ -48,6 +53,7 @@ public class ReflectionUtils {
 	}
 
 	public static Object getFieldValue(Object object, Field field) throws IllegalArgumentException, IllegalAccessException {
+		if(isNotAccessible(field)) { makeAccessible(field); }
 		return field.get(object);
 	}
 
@@ -125,6 +131,10 @@ public class ReflectionUtils {
 
 	public static boolean isAccessible(Field field) {
 		return Modifier.isPublic(field.getModifiers());
+	}
+	
+	public static boolean isNotAccessible(Field field) {
+		return ! Modifier.isPublic(field.getModifiers());
 	}
 
 	public static void makeAccessible(Field field) {

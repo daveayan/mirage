@@ -31,6 +31,7 @@ public class Person extends BaseDomainObject {
 	protected List<PhoneNumber> phones = new ArrayList<PhoneNumber>();
 	private List<Account> accounts = new ArrayList<Account>();
 	private List<Drivable> drives = new ArrayList<Drivable>();
+	private Account currentAccount = null;
 
 	public static Person getPartialInstance1() {
 		PhoneNumber ph1 = new PhoneNumber("443", "3233323");
@@ -63,6 +64,8 @@ public class Person extends BaseDomainObject {
 
 		p1.addDrives(new Car());
 		p1.addDrives(new Scooter());
+		
+		p1.currentAccount = new Account(345678, 5000);
 
 		return p1;
 	}
