@@ -38,6 +38,6 @@ public class ReflectionUtils_getDeepFieldInObjectSafely_Test {
 		Assert.assertEquals(2, ((Map<?, ?>) object).size());
 	}
 	@Test public void whenSecondLevelFieldValueIsPrimitiveInt() {
-		Assert.assertEquals(345678, ReflectionUtils.getDeepFieldInObjectSafely(Person.getPartialInstance1(), "currentAccount.accountNumber"));
+		Assert.assertEquals(345678, ReflectionUtils.getDeepFieldInObjectSafely(Person.getFullyLoadedInstance(), "currentAccount.accountNumber"));
 	}
 }

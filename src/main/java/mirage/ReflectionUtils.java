@@ -11,13 +11,21 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 public class ReflectionUtils {
 
-	public static Object getDeepFieldInObjectSafely(Object object, String fieldName) {
-		return null;
+	public static Object getDeepFieldInObjectSafely(Object object, String deepFieldName) {
+		if(object == null || deepFieldName == null) return null;
+		Object objectUnderWork = object;
+		String[] fieldNames = StringUtils.split(deepFieldName, '.');
+		for(String fieldName: fieldNames) {
+			objectUnderWork = getFieldInObjectSafely(objectUnderWork, fieldName);
+		}
+		return objectUnderWork;
 	}
 	
 	public static Object getFieldInObjectSafely(Object object, String fieldName) {
