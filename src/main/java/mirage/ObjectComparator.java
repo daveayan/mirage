@@ -5,6 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import mirage.comparator.Comparator;
+import mirage.comparator.impl.IterableComparator;
+import mirage.comparator.impl.LeafBooleanComparator;
+import mirage.comparator.impl.LeafDoubleComparator;
+import mirage.comparator.impl.LeafIntegerComparator;
 import mirage.comparator.impl.LeafStringComparator;
 
 public class ObjectComparator {
@@ -18,8 +22,8 @@ public class ObjectComparator {
 		Iterator<Comparator> iter = list_of_comparators.iterator();
 		while(iter.hasNext()) {
 			Comparator c = iter.next();
-			if(c.canCompare(objectLeft, objectRight)) {
-				return c.compare(objectLeft, objectRight);
+			if(c.canCompare(objectLeft, objectRight, this)) {
+				return c.compare(objectLeft, objectRight, this);
 			}
 		}
 		return false;
@@ -32,6 +36,10 @@ public class ObjectComparator {
 	}
 	private void initialize() {
 		list_of_comparators.add(new LeafStringComparator());
+		list_of_comparators.add(new LeafIntegerComparator());
+		list_of_comparators.add(new LeafDoubleComparator());
+		list_of_comparators.add(new LeafBooleanComparator());
+		list_of_comparators.add(new IterableComparator());
 	}
 	private ObjectComparator() {}
 }

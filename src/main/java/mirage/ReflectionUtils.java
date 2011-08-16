@@ -73,6 +73,10 @@ public class ReflectionUtils {
 		return false;
 	}
 
+	public static boolean objectImplements(Object objectUnderTest, Class<?> interfaceExpected) {
+		return classImplements(objectUnderTest.getClass(), interfaceExpected);
+	}
+	
 	public static boolean classImplements(Class<?> classUnderTest, Class<?> interfaceExpected) {
 		if (classUnderTest.equals(interfaceExpected)) {
 			return true;
@@ -97,12 +101,12 @@ public class ReflectionUtils {
 		return false;
 	}
 
-	public static boolean objectIsOfType(Class<?> actualClass, Class<?> expectedClass) {
+	public static boolean classIsOfType(Class<?> actualClass, Class<?> expectedClass) {
 		return actualClass.getName().trim().equals(expectedClass.getName().trim());
 	}
 
 	public static boolean objectIsOfType(Object object, Class<?> expectedClass) {
-		return object.getClass().getName().trim().equals(expectedClass.getName().trim());
+		return classIsOfType(object.getClass(), expectedClass) || objectImplements(object, expectedClass);
 	}
 
 	public static List<Class<?>> classNamesToClasses(List<String> classNames) {
