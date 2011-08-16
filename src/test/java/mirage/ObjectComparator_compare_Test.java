@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import sample.domain.Car;
+
 @RunWith(Parameterized.class)
 public class ObjectComparator_compare_Test {
 	@Parameters
@@ -51,6 +53,8 @@ public class ObjectComparator_compare_Test {
 		addTestCaseInto(testcases, ObjectUtils.asList(123), ObjectUtils.asList(123, 456), false);
 		addTestCaseInto(testcases, ObjectUtils.asList(123, 456), ObjectUtils.asList(123), false);
 		addTestCaseInto(testcases, ObjectUtils.asList(123), ObjectUtils.asList(), false);
+		
+		addTestCaseInto(testcases, new Car(), new Car(), false);
 		
 		return testcases;
 	}
