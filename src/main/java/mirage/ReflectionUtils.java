@@ -18,6 +18,16 @@ import com.google.common.collect.Lists;
 
 public class ReflectionUtils {
 
+	public static Object getDeepFieldInObject(Object object, String deepFieldName) {
+		if(object == null || deepFieldName == null) return null;
+		Object objectUnderWork = object;
+		String[] fieldNames = StringUtils.split(deepFieldName, '.');
+		for(String fieldName: fieldNames) {
+			objectUnderWork = getFieldInObject(objectUnderWork, fieldName);
+		}
+		return objectUnderWork;
+	}
+	
 	public static Object getDeepFieldInObjectSafely(Object object, String deepFieldName) {
 		if(object == null || deepFieldName == null) return null;
 		Object objectUnderWork = object;

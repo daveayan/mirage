@@ -87,6 +87,10 @@ public class Person extends BaseDomainObject {
 	private void addPhone(PhoneNumber ph1) {
 		phones.add(ph1);
 	}
+	
+	public void setPhones(List<PhoneNumber> phones) {
+		this.phones = phones;
+	}
 
 	private void addAccount(Account a1) {
 		accounts.add(a1);

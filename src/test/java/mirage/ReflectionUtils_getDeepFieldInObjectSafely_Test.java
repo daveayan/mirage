@@ -8,6 +8,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import sample.domain.Person;
+import sample.domain.Results;
 
 public class ReflectionUtils_getDeepFieldInObjectSafely_Test {
 	@Test public void whenObjectIsNullReturnNull() {
@@ -39,5 +40,9 @@ public class ReflectionUtils_getDeepFieldInObjectSafely_Test {
 	}
 	@Test public void whenSecondLevelFieldValueIsPrimitiveInt() {
 		Assert.assertEquals(345678, ReflectionUtils.getDeepFieldInObjectSafely(Person.getFullyLoadedInstance(), "currentAccount.accountNumber"));
+	}
+	@Test public void whenAnyNestedFieldIsAList() {
+		List<Object> objects = (List<Object>) ReflectionUtils.getDeepFieldInObject(Results.getFullyLoadedObject(), "list_of_persons.currentAccount.accountNumber");
+		System.out.println(objects);
 	}
 }
