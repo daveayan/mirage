@@ -42,7 +42,7 @@ public class ReflectionUtils_getDeepFieldInObjectSafely_Test {
 		Assert.assertEquals(345678, ReflectionUtils.getDeepFieldInObjectSafely(Person.getFullyLoadedInstance(), "currentAccount.accountNumber"));
 	}
 	@Test public void whenAnyNestedFieldIsAList() {
-		List<Object> objects = (List<Object>) ReflectionUtils.getDeepFieldInObject(Results.getFullyLoadedObject(), "list_of_persons.currentAccount.accountNumber");
-		System.out.println(objects);
+		// List<Object> objects = (List<Object>) ReflectionUtils.getDeepFieldInObject(Results.getFullyLoadedObject(), "list_of_persons.currentAccount.accountNumber");
+		// System.out.println(objects);
 	}
 }
