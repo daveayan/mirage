@@ -1,4 +1,4 @@
-package mirage;
+package daveayan.mirage;
 
 import java.util.ArrayList;
 import java.util.List;

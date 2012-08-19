@@ -1,16 +1,17 @@
-package mirage;
+package daveayan.mirage;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import mirage.comparator.Comparator;
-import mirage.comparator.impl.FieldBasedComparator;
-import mirage.comparator.impl.IterableComparator;
-import mirage.comparator.impl.LeafBooleanComparator;
-import mirage.comparator.impl.LeafDoubleComparator;
-import mirage.comparator.impl.LeafIntegerComparator;
-import mirage.comparator.impl.LeafStringComparator;
+import daveayan.mirage.comparator.Comparator;
+import daveayan.mirage.comparator.impl.FieldBasedComparator;
+import daveayan.mirage.comparator.impl.IterableComparator;
+import daveayan.mirage.comparator.impl.LeafBooleanComparator;
+import daveayan.mirage.comparator.impl.LeafDoubleComparator;
+import daveayan.mirage.comparator.impl.LeafIntegerComparator;
+import daveayan.mirage.comparator.impl.LeafStringComparator;
+
 
 public class ObjectComparator {
 	private List<Comparator> list_of_comparators = new ArrayList<Comparator>();

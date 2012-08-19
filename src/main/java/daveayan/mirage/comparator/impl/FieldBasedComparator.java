@@ -1,8 +1,8 @@
-package mirage.comparator.impl;
+package daveayan.mirage.comparator.impl;
 
-import mirage.ObjectComparator;
-import mirage.ReflectionUtils;
-import mirage.comparator.Comparator;
+import daveayan.mirage.ObjectComparator;
+import daveayan.mirage.ReflectionUtils;
+import daveayan.mirage.comparator.Comparator;
 
 public class FieldBasedComparator implements Comparator {
 	public boolean canCompare(Object objectLeft, Object objectRight, ObjectComparator oc) {

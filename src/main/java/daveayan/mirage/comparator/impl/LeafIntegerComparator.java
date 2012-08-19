@@ -1,7 +1,7 @@
-package mirage.comparator.impl;
+package daveayan.mirage.comparator.impl;
 
-import mirage.ObjectComparator;
-import mirage.comparator.Comparator;
+import daveayan.mirage.ObjectComparator;
+import daveayan.mirage.comparator.Comparator;
 
 public class LeafIntegerComparator implements Comparator {
 	public boolean canCompare(Object objectLeft, Object objectRight, ObjectComparator oc) {

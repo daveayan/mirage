@@ -1,9 +1,10 @@
-package mirage.comparator.impl;
+package daveayan.mirage.comparator.impl;
 
 import java.util.Iterator;
 
-import mirage.ObjectComparator;
-import mirage.comparator.Comparator;
+import daveayan.mirage.ObjectComparator;
+import daveayan.mirage.comparator.Comparator;
+
 
 public class IterableComparator implements Comparator {
 	public boolean canCompare(Object objectLeft, Object objectRight, ObjectComparator oc) {

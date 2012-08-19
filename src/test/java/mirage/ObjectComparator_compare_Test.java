@@ -11,6 +11,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import daveayan.mirage.ObjectComparator;
+import daveayan.mirage.ObjectUtils;
+
 import sample.domain.Car;
 
 @RunWith(Parameterized.class)
