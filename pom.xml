@@ -1,9 +1,42 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>daveayan</groupId>
+	<groupId>com.daveayan</groupId>
 	<artifactId>mirage</artifactId>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<description>
+		This library provides methods around Java Reflection
+	</description>
+	<url>https://github.com/daveayan/mirage</url>
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:git://github.com/daveayan/mirage.git</connection>
+		<developerConnection>scm:git:git@github.com:daveayan/mirage.git</developerConnection>
+		<url>git://github.com/daveayan/mirage.git</url>
+		<tag>HEAD</tag>
+	</scm>
+	<developers>
+		<developer>
+			<id>daveayan</id>
+			<name>Ayan Dave</name>
+			<email>daveayan@gmail.com</email>
+			<url>http://daveayan.com</url>
+		</developer>
+	</developers>
 	<dependencies>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -22,14 +55,12 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
 	<distributionManagement>
 		<repository>
-			<id>repo</id>
-			<url>https://github.com/daveayan/_mavenrepository/raw/master/releases</url>
+			<id>sonatype-nexus-staging</id>
+			<name>Nexus Staging Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
-		<snapshotRepository>
-			<id>snapshot-repo</id>
-			<url>https://github.com/daveayan/_mavenrepository/raw/master/snapshots</url>
-		</snapshotRepository>
 	</distributionManagement>
 </project>
