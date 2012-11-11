@@ -1,10 +1,11 @@
-package daveayan.mirage.comparator.impl;
+package com.daveayan.mirage.comparator.impl;
 
 
 import org.apache.commons.lang.StringUtils;
 
-import daveayan.mirage.ObjectComparator;
-import daveayan.mirage.comparator.Comparator;
+import com.daveayan.mirage.ObjectComparator;
+import com.daveayan.mirage.comparator.Comparator;
+
 
 public class LeafStringComparator implements Comparator {
 	public boolean canCompare(Object objectLeft, Object objectRight, ObjectComparator oc) {

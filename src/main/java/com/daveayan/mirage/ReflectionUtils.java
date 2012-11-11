@@ -1,4 +1,4 @@
-package daveayan.mirage;
+package com.daveayan.mirage;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

@@ -1,9 +1,10 @@
-package daveayan.mirage.comparator.impl;
+package com.daveayan.mirage.comparator.impl;
 
 import java.util.Iterator;
 
-import daveayan.mirage.ObjectComparator;
-import daveayan.mirage.comparator.Comparator;
+import com.daveayan.mirage.ObjectComparator;
+import com.daveayan.mirage.comparator.Comparator;
+
 
 
 public class IterableComparator implements Comparator {

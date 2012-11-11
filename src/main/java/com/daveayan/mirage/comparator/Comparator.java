@@ -1,6 +1,6 @@
-package daveayan.mirage.comparator;
+package com.daveayan.mirage.comparator;
 
-import daveayan.mirage.ObjectComparator;
+import com.daveayan.mirage.ObjectComparator;
 
 public interface Comparator {
 	public boolean canCompare(Object objectLeft, Object objectRight, ObjectComparator oc) ;

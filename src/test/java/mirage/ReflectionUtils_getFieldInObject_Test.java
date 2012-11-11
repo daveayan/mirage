@@ -7,7 +7,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import daveayan.mirage.ReflectionUtils;
+import com.daveayan.mirage.ReflectionUtils;
+
 
 import sample.domain.Person;
 
