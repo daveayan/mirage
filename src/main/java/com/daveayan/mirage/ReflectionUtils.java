@@ -12,12 +12,36 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.objenesis.Objenesis;
+import org.objenesis.ObjenesisStd;
+import org.objenesis.instantiator.ObjectInstantiator;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 public class ReflectionUtils {
 
+	public static Object setFieldInObject(Object object, String fieldName, Object valueToSet) {
+		if(object == null || fieldName == null) return null;
+		Object objectUnderWork = object;
+		List<Field> fields = getAllFieldsIn(objectUnderWork);
+		for(Field field: fields) {
+			if(StringUtils.equals(field.getName(), fieldName)) {
+				makeAccessible(field);
+				try {
+					field.set(objectUnderWork, valueToSet);
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return objectUnderWork;
+	}
+	
 	public static Object getDeepFieldInObject(Object object, String deepFieldName) {
 		if(object == null || deepFieldName == null) return null;
 		Object objectUnderWork = object;
@@ -214,14 +238,33 @@ public class ReflectionUtils {
 		return null;
 	}
 
+	/**
+	 * Use this method to get the Object for the specified class name
+	 * @param className
+	 * @return
+	 */
 	public static Object objectFor(String className) {
 		return objectForClassForcibly(asClass(className));
 	}
 
+	/**
+	 * Use this method to find a specific method in a object
+	 * @param targetObject
+	 * @param methodName
+	 * @param parameters
+	 * @return java.lang.reflect.Method if one was found, null otherwise
+	 */
 	public static Method getMethodFor(Object targetObject, String methodName, Object[] parameters) {
 		return getMethodFor(targetObject.getClass(), methodName, parameters);
 	}
 
+	/**
+	 * Use this method to find a specific method in a class
+	 * @param targetClass
+	 * @param methodName
+	 * @param parameters
+	 * @return java.lang.reflect.Method if one was found, null otherwise
+	 */
 	public static Method getMethodFor(Class<?> targetClass, String methodName, Object[] parameters) {
 		Method[] methods = targetClass.getMethods();
 		for (Method method : methods) {
@@ -250,50 +293,79 @@ public class ReflectionUtils {
 		return true;
 	}
 
+	/**
+	 * Use this method to get an instance of the object of the specific class name.
+	 * This method does not throw any exception
+	 * @param className
+	 * @return Object if one was instantiated, null otherwise
+	 */
 	public static Object getInstanceOfClassForcibly(String className) {
 		return getInstanceOfClassForcibly(getClassForClassName(className));
 	}
 
+	/**
+	 * Use this method to get an instance of the object of the specific class.
+	 * This method does not throw any exception
+	 * @param Class<?>
+	 * @return Object if one was instantiated, null otherwise
+	 */
 	public static Object getInstanceOfClassForcibly(Class<?> clazz) {
-		try {
-			Constructor<?> c = clazz.getDeclaredConstructor();
-			c.setAccessible(true);
-			return c.newInstance();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		Objenesis objenesis = new ObjenesisStd();
+		ObjectInstantiator thingyInstantiator = objenesis.getInstantiatorOf(clazz);
+		return thingyInstantiator.newInstance();
+//		try {
+//			Constructor<?> c = clazz.getDeclaredConstructor();
+//			c.setAccessible(true);
+//			return c.newInstance();
+//		} catch (IllegalArgumentException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (InvocationTargetException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (InstantiationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (SecurityException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (NoSuchMethodException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 
+	/**
+	 * Use this method to get an instance of the object of the specific class.
+	 * This method throws exception if there were issues creating the object
+	 * @param Class<?>
+	 * @return Object if one was instantiated, null otherwise
+	 */
 	public static Object getInstanceOfClass(Class<?> clazz) {
-		try {
-			return clazz.newInstance();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		Objenesis objenesis = new ObjenesisStd();
+		ObjectInstantiator thingyInstantiator = objenesis.getInstantiatorOf(clazz);
+		return thingyInstantiator.newInstance();
+//		try {
+//			return clazz.newInstance();
+//		} catch (InstantiationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 
+	/**
+	 * Use this method to get the class for the name of class passed in. Does Class.forName under.
+	 * @param className
+	 * @return The class if one was found, null otherwise
+	 */
 	public static Class<?> getClassForClassName(String className) {
 		try {
 			return Class.forName(className);
@@ -304,24 +376,60 @@ public class ReflectionUtils {
 		return null;
 	}
 
+	/** Use this method to determine if the "from" can be casted "to". 
+	 * This is a safe method, it does not throw exception.
+	 * 
+	 * @param to - Object
+	 * @param from - Object
+	 * @return 	false if 'to' or 'from' is null
+	 * 					false if 'from' cannot be casted 'to'
+	 * 					true if 'from' can be casted 'to'
+	 */
 	public static boolean canCast(Object to, Object from) {
 		if (to == null || from == null)
 			return false;
 		return canCast(to.getClass(), from.getClass());
 	}
 
+	/** Use this method to determine if the "from" can be casted "to". 
+	 * This is a safe method, it does not throw exception.
+	 * 
+	 * @param to - Object
+	 * @param from - Class<?>
+	 * @return 	false if 'to' or 'from' is null
+	 * 					false if 'from' cannot be casted 'to'
+	 * 					true if 'from' can be casted 'to'
+	 */	
 	public static boolean canCast(Object to, Class<?> from) {
 		if (to == null || from == null)
 			return false;
 		return canCast(to.getClass(), from);
 	}
 
+	/** Use this method to determine if the "from" can be casted "to". 
+	 * This is a safe method, it does not throw exception.
+	 * 
+	 * @param to - Class<?>
+	 * @param from - Object
+	 * @return 	false if 'to' or 'from' is null
+	 * 					false if 'from' cannot be casted 'to'
+	 * 					true if 'from' can be casted 'to'
+	 */
 	public static boolean canCast(Class<?> to, Object from) {
 		if (to == null || from == null)
 			return false;
 		return canCast(to, from.getClass());
 	}
 
+	/** Use this method to determine if the "from" can be casted "to". 
+	 * This is a safe method, it does not throw exception.
+	 * 
+	 * @param to - Class<?>
+	 * @param from - Class<?>
+	 * @return 	false if 'to' or 'from' is null
+	 * 					false if 'from' cannot be casted 'to'
+	 * 					true if 'from' can be casted 'to'
+	 */
 	public static boolean canCast(Class<?> to, Class<?> from) {
 		if (to == null || from == null)
 			return false;
