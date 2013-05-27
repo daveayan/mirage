@@ -1,14 +1,13 @@
 package com.daveayan.mirage;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -215,30 +214,10 @@ public class ReflectionUtils {
 		Objenesis objenesis = new ObjenesisStd();
 		ObjectInstantiator thingyInstantiator = objenesis.getInstantiatorOf(clazz);
 		return thingyInstantiator.newInstance();
-//		try {
-//			Constructor<?> c = clazz.getDeclaredConstructor();
-//			c.setAccessible(true);
-//			return c.newInstance();
-//		} catch (IllegalArgumentException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (InvocationTargetException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (InstantiationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (SecurityException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (NoSuchMethodException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return null;
+	}
+	
+	public static Object objectForClassForcibly(String className) {
+		return objectForClassForcibly(asClass(className));
 	}
 
 	/**
@@ -247,9 +226,38 @@ public class ReflectionUtils {
 	 * @return
 	 */
 	public static Object objectFor(String className) {
-		return objectForClassForcibly(asClass(className));
+		return objectFor(asClass(className));
+	}
+	
+	public static Object set_value_on_field(Object target, String field_name, Object value) {
+		List<Field> fields = getAllFieldsIn(target);
+		for (Field field : fields) {
+			if (StringUtils.equals(field.getName(), field_name)) {
+				makeAccessible(field);
+				try {
+					field.set(target, value);
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return target;
 	}
 
+	public static Object get_value_on_field(Object target, String field_name) {
+	List<Field> fields = getAllFieldsIn(target);
+	for (Field field : fields) {
+		if (fieldNameIs(field, field_name)) {
+			return getFieldValueSafely(target, field);
+		}
+	}
+	return null;
+}
+	
 	/**
 	 * Use this method to find a specific method in a object
 	 * @param targetObject
@@ -295,7 +303,32 @@ public class ReflectionUtils {
 		}
 		return true;
 	}
+	
+	public static List<String> get_all_field_names_on(Class< ? > target) {
+		List<String> field_names = new ArrayList<String>();
+		Object target_object = objectForClassForcibly(target);
+		List<Field> fields = getAllFieldsIn(target_object);
+		for (Field field : fields) {
+			if (field != null) {
+				field_names.add(field.getType().toString());
+			}
+		}
+		return field_names;
+	}
 
+	public static Object getFullInstanceOfClassForcibly(Class<?> clazz) {
+		Object o = getInstanceOfClassForcibly(clazz);
+		List<Field> fields = ReflectionUtils.getAllFieldsIn(o);
+		Iterator<Field> iter = fields.iterator();
+		while (true) {
+			if (!iter.hasNext())
+				break;
+			Field field = iter.next();
+			
+		}
+		return o;
+	}
+	
 	/**
 	 * Use this method to get an instance of the object of the specific class name.
 	 * This method does not throw any exception
@@ -316,30 +349,6 @@ public class ReflectionUtils {
 		Objenesis objenesis = new ObjenesisStd();
 		ObjectInstantiator thingyInstantiator = objenesis.getInstantiatorOf(clazz);
 		return thingyInstantiator.newInstance();
-//		try {
-//			Constructor<?> c = clazz.getDeclaredConstructor();
-//			c.setAccessible(true);
-//			return c.newInstance();
-//		} catch (IllegalArgumentException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (InvocationTargetException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (InstantiationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (SecurityException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (NoSuchMethodException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return null;
 	}
 
 	/**
@@ -352,16 +361,6 @@ public class ReflectionUtils {
 		Objenesis objenesis = new ObjenesisStd();
 		ObjectInstantiator thingyInstantiator = objenesis.getInstantiatorOf(clazz);
 		return thingyInstantiator.newInstance();
-//		try {
-//			return clazz.newInstance();
-//		} catch (InstantiationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return null;
 	}
 
 	/**
