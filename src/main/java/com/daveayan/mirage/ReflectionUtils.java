@@ -201,13 +201,10 @@ public class ReflectionUtils {
 		try {
 			return clazz.newInstance();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return objectForClassForcibly(clazz);
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return objectForClassForcibly(clazz);
 		}
-		return null;
 	}
 
 	public static Object objectForClassForcibly(Class<?> clazz) {
