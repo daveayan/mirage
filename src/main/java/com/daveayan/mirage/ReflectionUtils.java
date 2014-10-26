@@ -1,6 +1,7 @@
 package com.daveayan.mirage;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class ReflectionUtils {
 		}
 		return objectUnderWork;
 	}
-	
+
 	public static Object getDeepFieldInObject(Object object, String deepFieldName) {
 		if(object == null || deepFieldName == null) return null;
 		Object objectUnderWork = object;
@@ -50,7 +51,7 @@ public class ReflectionUtils {
 		}
 		return objectUnderWork;
 	}
-	
+
 	public static Object getDeepFieldInObjectSafely(Object object, String deepFieldName) {
 		if(object == null || deepFieldName == null) return null;
 		Object objectUnderWork = object;
@@ -60,7 +61,7 @@ public class ReflectionUtils {
 		}
 		return objectUnderWork;
 	}
-	
+
 	public static Object getFieldInObjectSafely(Object object, String fieldName) {
 		try {
 			return getFieldInObject(object, fieldName);
@@ -109,7 +110,7 @@ public class ReflectionUtils {
 	public static boolean objectImplements(Object objectUnderTest, Class<?> interfaceExpected) {
 		return classImplements(objectUnderTest.getClass(), interfaceExpected);
 	}
-	
+
 	public static boolean classImplements(Class<?> classUnderTest, Class<?> interfaceExpected) {
 		if (classUnderTest.equals(interfaceExpected)) {
 			return true;
@@ -177,7 +178,7 @@ public class ReflectionUtils {
 	public static boolean isAccessible(Field field) {
 		return Modifier.isPublic(field.getModifiers());
 	}
-	
+
 	public static boolean isNotAccessible(Field field) {
 		return ! Modifier.isPublic(field.getModifiers());
 	}
@@ -212,7 +213,7 @@ public class ReflectionUtils {
 		ObjectInstantiator thingyInstantiator = objenesis.getInstantiatorOf(clazz);
 		return thingyInstantiator.newInstance();
 	}
-	
+
 	public static Object objectForClassForcibly(String className) {
 		return objectForClassForcibly(asClass(className));
 	}
@@ -225,7 +226,7 @@ public class ReflectionUtils {
 	public static Object objectFor(String className) {
 		return objectFor(asClass(className));
 	}
-	
+
 	public static Object set_value_on_field(Object target, String field_name, Object value) {
 		List<Field> fields = getAllFieldsIn(target);
 		for (Field field : fields) {
@@ -254,7 +255,7 @@ public class ReflectionUtils {
 	}
 	return null;
 }
-	
+
 	/**
 	 * Use this method to find a specific method in a object
 	 * @param targetObject
@@ -300,7 +301,7 @@ public class ReflectionUtils {
 		}
 		return true;
 	}
-	
+
 	public static List<String> get_all_field_names_on(Class< ? > target) {
 		List<String> field_names = new ArrayList<String>();
 		Object target_object = objectForClassForcibly(target);
@@ -321,11 +322,11 @@ public class ReflectionUtils {
 			if (!iter.hasNext())
 				break;
 			Field field = iter.next();
-			
+
 		}
 		return o;
 	}
-	
+
 	/**
 	 * Use this method to get an instance of the object of the specific class name.
 	 * This method does not throw any exception
@@ -375,9 +376,9 @@ public class ReflectionUtils {
 		return null;
 	}
 
-	/** Use this method to determine if the "from" can be casted "to". 
+	/** Use this method to determine if the "from" can be casted "to".
 	 * This is a safe method, it does not throw exception.
-	 * 
+	 *
 	 * @param to - Object
 	 * @param from - Object
 	 * @return 	false if 'to' or 'from' is null
@@ -390,24 +391,24 @@ public class ReflectionUtils {
 		return canCast(to.getClass(), from.getClass());
 	}
 
-	/** Use this method to determine if the "from" can be casted "to". 
+	/** Use this method to determine if the "from" can be casted "to".
 	 * This is a safe method, it does not throw exception.
-	 * 
+	 *
 	 * @param to - Object
 	 * @param from - Class<?>
 	 * @return 	false if 'to' or 'from' is null
 	 * 					false if 'from' cannot be casted 'to'
 	 * 					true if 'from' can be casted 'to'
-	 */	
+	 */
 	public static boolean canCast(Object to, Class<?> from) {
 		if (to == null || from == null)
 			return false;
 		return canCast(to.getClass(), from);
 	}
 
-	/** Use this method to determine if the "from" can be casted "to". 
+	/** Use this method to determine if the "from" can be casted "to".
 	 * This is a safe method, it does not throw exception.
-	 * 
+	 *
 	 * @param to - Class<?>
 	 * @param from - Object
 	 * @return 	false if 'to' or 'from' is null
@@ -420,9 +421,9 @@ public class ReflectionUtils {
 		return canCast(to, from.getClass());
 	}
 
-	/** Use this method to determine if the "from" can be casted "to". 
+	/** Use this method to determine if the "from" can be casted "to".
 	 * This is a safe method, it does not throw exception.
-	 * 
+	 *
 	 * @param to - Class<?>
 	 * @param from - Class<?>
 	 * @return 	false if 'to' or 'from' is null
@@ -433,6 +434,36 @@ public class ReflectionUtils {
 		if (to == null || from == null)
 			return false;
 		return to.isAssignableFrom(from);
+	}
+
+	public static Object call_forcibly(Object targetObject, String methodName, Object... parameters) {
+		Method method = ReflectionUtils.getMethodFor(targetObject, methodName, parameters);
+		if(! method.isAccessible()) {
+			method.setAccessible(true);
+		}
+		return _call_method(targetObject, method, parameters);
+	}
+
+	public static Object call(Object targetObject, String methodName, Object... parameters) {
+		Method method = ReflectionUtils.getMethodFor(targetObject, methodName, parameters);
+		return _call_method(targetObject, method, parameters);
+	}
+
+	private static Object _call_method(Object targetObject, Method method, Object... parameters) {
+		Object returnValue = null;
+		try {
+			returnValue = method.invoke(targetObject, parameters);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return returnValue;
 	}
 
 	private ReflectionUtils() {
