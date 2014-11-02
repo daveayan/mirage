@@ -18,6 +18,7 @@ import org.objenesis.instantiator.ObjectInstantiator;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Primitives;
 
 public class ReflectionUtils {
 
@@ -433,7 +434,9 @@ public class ReflectionUtils {
 	public static boolean canCast(Class<?> to, Class<?> from) {
 		if (to == null || from == null)
 			return false;
-		return to.isAssignableFrom(from);
+		Class toWrapper = to.isPrimitive() ? Primitives.wrap(to) : to;
+		Class fromWrapper = from.isPrimitive() ? Primitives.wrap(from) : from;
+		return toWrapper.isAssignableFrom(fromWrapper);
 	}
 
 	public static Object call_forcibly(Object targetObject, String methodName, Object... parameters) {
